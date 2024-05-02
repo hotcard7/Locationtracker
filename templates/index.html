@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trace and Track</title>
+    <script>
+        function sendLocation(latitude, longitude) {
+            fetch('/log_location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({latitude: latitude, longitude: longitude})
+            })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch((error) => console.error('Error:', error));
+        }
+
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    sendLocation(position.coords.latitude, position.coords.longitude);
+                }, function(error) {
+                    console.error('Geolocation failed: ' + error.message);
+                }, {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                });
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1>Welcome to
